@@ -15,7 +15,7 @@ export function Polaroids({ srcs }: { srcs: readonly string[] }) {
     <div className="polaroids" aria-hidden="true">
       {srcs.slice(0, SPOTS.length).map((src, i) => (
         /* eslint-disable-next-line @next/next/no-img-element */
-        <img key={src} src={src} alt="" loading="lazy" decoding="async" style={SPOTS[i]} />
+        <img key={src} src={src} alt="" loading="lazy" decoding="async" crossOrigin="anonymous" style={SPOTS[i]} />
       ))}
     </div>
   );

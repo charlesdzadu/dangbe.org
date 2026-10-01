@@ -87,7 +87,7 @@ export function HeroPhoto({ src }: { src: string }) {
   return (
     <figure className="card2 card2--photo hub-hero__photo">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" loading="eager" decoding="async" />
+      <img src={src} alt="" loading="eager" decoding="async" crossOrigin="anonymous" />
     </figure>
   );
 }
@@ -107,7 +107,7 @@ export function PhotoSlab({
   return (
     <section className="wslab quote-slab">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" loading="lazy" decoding="async" />
+      <img src={src} alt="" loading="lazy" decoding="async" crossOrigin="anonymous" />
       <Reveal>
         <p className="quote-slab__text">{title}</p>
         {body ? <p className="quote-slab__sub">{body}</p> : null}

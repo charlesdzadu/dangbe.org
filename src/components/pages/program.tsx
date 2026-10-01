@@ -131,7 +131,7 @@ export function ProgramPage({ locale }: { locale: Locale }) {
               </article>
               <article className="card2 card2--photo card2--photo-text">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={PHOTOS.programMentoring} alt="" loading="lazy" decoding="async" />
+                <img src={PHOTOS.programMentoring} alt="" loading="lazy" decoding="async" crossOrigin="anonymous" />
                 <span className="card2__num">03</span>
                 <h3>{t.tracking.steps[2]?.title}</h3>
                 <p>{t.tracking.steps[2]?.body}</p>

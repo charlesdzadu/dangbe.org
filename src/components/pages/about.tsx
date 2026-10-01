@@ -116,7 +116,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
                   <figure key={member.id}>
                     {member.photo ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
-                      <img src={member.photo} alt="" loading="lazy" decoding="async" />
+                      <img src={member.photo} alt="" loading="lazy" decoding="async" crossOrigin="anonymous" />
                     ) : (
                       <div className="people__initials" aria-hidden="true">
                         {initials(member.name)}
@@ -162,7 +162,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
               </article>
               <figure className="card2 card2--photo">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={PHOTOS.aboutGroup} alt="" loading="lazy" decoding="async" />
+                <img src={PHOTOS.aboutGroup} alt="" loading="lazy" decoding="async" crossOrigin="anonymous" />
               </figure>
             </div>
           </Reveal>

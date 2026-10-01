@@ -63,7 +63,7 @@ export function HomePage({ locale }: { locale: Locale }) {
 
         <div className="hero2__media">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={PHOTOS.hero} alt="" loading="eager" decoding="async" fetchPriority="high" />
+          <img src={PHOTOS.hero} alt="" loading="eager" decoding="async" crossOrigin="anonymous" fetchPriority="high" />
           <div className="hero2__card">
             <div className="hero2__card-head">
               <div>
@@ -239,7 +239,7 @@ export function HomePage({ locale }: { locale: Locale }) {
               </div>
               <div className="cslab__photo">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={PHOTOS.employersHandshake} alt="" loading="lazy" decoding="async" />
+                <img src={PHOTOS.employersHandshake} alt="" loading="lazy" decoding="async" crossOrigin="anonymous" />
               </div>
             </div>
           </Reveal>
@@ -267,7 +267,7 @@ export function HomePage({ locale }: { locale: Locale }) {
               </article>
               <figure className="card2 card2--photo">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={PHOTOS.teamCowork} alt="" loading="lazy" decoding="async" />
+                <img src={PHOTOS.teamCowork} alt="" loading="lazy" decoding="async" crossOrigin="anonymous" />
               </figure>
             </div>
             <div className="btn-row">

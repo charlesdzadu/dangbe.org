@@ -52,7 +52,7 @@ export function EmployersPage({ locale }: { locale: Locale }) {
             <div className="three">
               <article className="card2 card2--lg card2--photo card2--photo-text">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={PHOTOS.employersMeeting} alt="" loading="lazy" decoding="async" />
+                <img src={PHOTOS.employersMeeting} alt="" loading="lazy" decoding="async" crossOrigin="anonymous" />
                 <h3>{t.why.cards[0]?.title}</h3>
                 <p>{t.why.cards[0]?.body}</p>
               </article>
