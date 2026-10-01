@@ -1,0 +1,60 @@
+{
+  "name": "dangbe",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.15.0",
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "prisma generate && next build",
+    "start": "next start --port 3000",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:reset": "prisma migrate reset",
+    "db:seed": "prisma db seed",
+    "db:seed:admin": "tsx --env-file=.env prisma/seed-admin.ts",
+    "db:studio": "prisma studio",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "fonts": "bash tools/fonts/build.sh"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.16.0",
+    "bcryptjs": "^3.0.2",
+    "next": "^15.5.9",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^15.5.9",
+    "prettier": "^3.4.2",
+    "prisma": "^6.16.0",
+    "sharp": "^0.35.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^3.2.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma",
+      "esbuild",
+      "unrs-resolver",
+      "sharp"
+    ]
+  }
+}

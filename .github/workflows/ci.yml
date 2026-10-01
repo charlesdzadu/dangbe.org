@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: dangbe
+          POSTGRES_PASSWORD: dangbe
+          POSTGRES_DB: dangbe
+        ports: ['5433:5432']
+        options: >-
+          --health-cmd "pg_isready -U dangbe"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://dangbe:dangbe@localhost:5433/dangbe
+      DIRECT_URL: postgresql://dangbe:dangbe@localhost:5433/dangbe
+      NEXT_PUBLIC_SITE_URL: https://dangbe.org
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm prisma migrate deploy
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build

@@ -1,0 +1,168 @@
+/* ==========================================================================
+   Forms — the same objects as the rest of the page: filled fields, 44 px
+   targets, one primary button, errors in words under the field.
+   ========================================================================== */
+
+.form {
+  display: grid;
+  gap: 32px;
+}
+
+.form__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form__section {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  display: grid;
+  gap: 18px;
+}
+
+.form__section > legend {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.form__row {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .form__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field__label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.field__input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-btn, 8px);
+  background: #ffffff;
+  color: var(--fg);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.4;
+  transition: border-color var(--t-fast) var(--ease);
+}
+
+.field__input:focus {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+  border-color: var(--fg);
+}
+
+textarea.field__input {
+  resize: vertical;
+  min-height: 140px;
+}
+
+.field__select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 2.4rem;
+  background:
+    linear-gradient(45deg, transparent 50%, currentColor 50%) calc(100% - 18px) 55% / 5px 5px no-repeat,
+    linear-gradient(135deg, currentColor 50%, transparent 50%) calc(100% - 13px) 55% / 5px 5px no-repeat,
+    #ffffff;
+  cursor: pointer;
+}
+
+.field__help {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--fg-60);
+}
+
+.field__error {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--danger-ink);
+}
+
+.field[data-invalid='true'] .field__input {
+  border-color: var(--alert);
+}
+
+.field--check .field__check {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  cursor: pointer;
+}
+
+.field--check input {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--night);
+}
+
+.field--check a {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  font-weight: 600;
+}
+
+.form__error {
+  padding: 12px 16px;
+  border-radius: var(--r-btn, 8px);
+  background: var(--alert-soft);
+  color: var(--danger-ink);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.form__success {
+  padding: 12px 16px;
+  border-radius: var(--r-btn, 8px);
+  background: var(--true-soft);
+  color: var(--check-fg);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* The form sits in a card on the page. */
+.form-card {
+  max-width: 820px;
+}
+
+.form-card .form {
+  margin-top: 8px;
+}

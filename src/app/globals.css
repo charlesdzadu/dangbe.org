@@ -1,0 +1,1054 @@
+/**
+ * DANGBE — design system. Ported from the TamTam landing (hand-written CSS,
+ * tokens on :root, colour as objects on a white page) with DANGBE's own
+ * palette and typeface.
+ *
+ * Indigo nuit #1B1F48 · Terre cuite #E4672F · Brique #B6431A · Ivoire #F6F1E7
+ * Sable #F0E4CF · Brume #E1E3F2 · Argile #F8D8C5 · Vert palme #17693F.
+ * Light theme only.
+ *
+ * Two rules the whole file leans on:
+ *  - Terre cuite is a FILL, never words on light (3.3:1). Brique (5.5:1) is
+ *    decoration and short links. Vert palme means "true".
+ *  - Components have no dark variant. A section declares `.surface-dark`
+ *    (or `.fill-ink`, `.card2--ink`) and every child reads the same token
+ *    names. Aliases are re-declared inside the scope because a `var()`
+ *    inside a `:root` token resolves on `:root`, not where it is read.
+ *
+ * styles/blocks.css (the page language) and styles/chrome.css load AFTER
+ * this file and own the slabs, the cards, the nav card and the footer.
+ */
+
+/* ======================================================================
+   Tokens
+   ====================================================================== */
+
+:root {
+  /* Canvas & surfaces — the page is white; colour is an object on it */
+  --canvas: #ffffff;
+  --mint: #f6f1e7; /* « Ivoire »: text and objects on dark (name kept for the ported CSS) */
+  --surface: #ffffff;
+  --inset: #f1ede5; /* fields, chips, tracks */
+  --night: #1b1f48; /* « Indigo nuit »: text on light, dark objects */
+  --night-2: #262b5c; /* raised on dark */
+  --night-3: #313770; /* inset on dark */
+  --ink: #12153a; /* deepest: scrims */
+
+  /* Text on light */
+  --fg: var(--night);
+  --fg-60: rgba(27, 31, 72, 0.68); /* 5.5:1 on white */
+  --fg-40: rgba(27, 31, 72, 0.55); /* aria-hidden labels or ≥18px only */
+  --line: rgba(27, 31, 72, 0.1);
+  --line-strong: rgba(27, 31, 72, 0.18);
+
+  /* Accent — « Terre cuite » is a FILL; « Brique » is decoration and short links */
+  --signal: #e4672f; /* 3.3:1 on white → never text on light */
+  --signal-ink: #b6431a; /* 5.5:1 on white: dots, underlines, the period */
+  --signal-soft: rgba(228, 103, 47, 0.16);
+  --on-signal: var(--night); /* 4.7:1 on Terre cuite */
+
+  /* « Vert palme » means "true" (ticks, success). --money is the alias the ported CSS reads. */
+  --true: #17693f; /* 6.7:1 on white */
+  --true-on-dark: #7ed9a6; /* 9.3:1 on Indigo nuit */
+  --true-soft: rgba(23, 105, 63, 0.14);
+  --money: var(--true);
+  --money-on-dark: var(--true-on-dark);
+  --money-soft: var(--true-soft);
+  --alert: #c0392b;
+  --alert-soft: rgba(192, 57, 43, 0.12);
+  --neutral: #8e8a9e; /* never text */
+
+  /* Chrome */
+  --nav-bg: rgba(255, 255, 255, 0.88);
+  --nav-h: 64px;
+  --outline-word: rgba(27, 31, 72, 0.12);
+  --shadow-card: 0 1px 2px rgba(27, 31, 72, 0.05), 0 16px 40px -24px rgba(27, 31, 72, 0.22);
+  --shadow-ink: 0 24px 60px -28px rgba(27, 31, 72, 0.45);
+
+  /* Rhythm */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+  --gap-head: clamp(2rem, 4vw, 3rem);
+
+  /* Radius */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Motion — one easing */
+  --ease: cubic-bezier(0.2, 0.6, 0.35, 1);
+  --t-fast: 200ms;
+  --t: 400ms;
+  --t-slow: 700ms;
+
+  /* Fonts: --font-display, --font-body, --font-mono are set by next/font on <html>. */
+
+  /* Aliases the ported rules read. var() here resolves on :root; scopes re-declare. */
+  --bg-page: var(--canvas);
+  --bg-raised: var(--mint);
+  --bg-card: var(--surface);
+  --bg-inset: var(--inset);
+  --bg: var(--canvas);
+  --brand: var(--signal);
+  --brand-ink: var(--signal-ink);
+  --on-brand: var(--on-signal);
+  --card-border: var(--line-strong);
+  --check-bg: var(--true-soft);
+  --check-fg: #0f4a2c;
+}
+
+/* Derived tokens: a component inverts on a surface without a dark variant. */
+:root {
+  --focus: var(--night);
+  --btn-ink-bg: var(--night);
+  --btn-ink-fg: var(--mint);
+  --btn-ink-hover: var(--night-2);
+  --warn-ink: #7a3a12; /* text inside a --signal-soft badge on light */
+  --danger-ink: #7f2a1e; /* text inside an --alert-soft badge on light */
+}
+
+/* ======================================================================
+   Surfaces — a section declares one class; children read the tokens.
+   ====================================================================== */
+
+.surface-sand {
+  background: var(--mint);
+  --inset: #e9e3d6;
+  --bg-inset: #e9e3d6;
+}
+
+.surface-dark,
+.fill-ink,
+.card2--ink {
+  color: var(--fg);
+  --fg: var(--mint);
+  --fg-60: rgba(246, 241, 231, 0.72);
+  --fg-40: rgba(246, 241, 231, 0.55);
+  --line: rgba(246, 241, 231, 0.14);
+  --line-strong: rgba(246, 241, 231, 0.3);
+  --surface: var(--night-2);
+  --inset: var(--night-3);
+  --signal-ink: var(--signal); /* Terre cuite may be text on dark: 4.7:1 */
+  --money: var(--true-on-dark);
+  --true: var(--true-on-dark);
+  --money-soft: rgba(126, 217, 166, 0.16);
+  --true-soft: rgba(126, 217, 166, 0.16);
+  --check-fg: var(--true-on-dark);
+  --check-bg: rgba(126, 217, 166, 0.16);
+  --shadow-card: none;
+  --bg-card: var(--night-2);
+  --bg-inset: var(--night-3);
+  --bg-page: var(--night);
+  --brand-ink: var(--signal);
+  --card-border: rgba(246, 241, 231, 0.3);
+  --focus: var(--signal);
+  --btn-ink-bg: var(--mint);
+  --btn-ink-fg: var(--night);
+  --btn-ink-hover: #e9e3d6;
+  --warn-ink: var(--signal);
+}
+
+.surface-dark {
+  background: var(--night);
+}
+
+/* ======================================================================
+   Base
+   ====================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + var(--s-4));
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--fg);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  overflow-x: hidden;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ======================================================================
+   Typography
+   ====================================================================== */
+
+.display-hero,
+.display,
+.display-md,
+.display-sm {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.display-hero {
+  font-size: clamp(2.4rem, 5.2vw, 4.4rem);
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+.display-md {
+  font-size: clamp(1.8rem, 3.8vw, 2.8rem);
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+}
+
+.display-sm {
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.lede {
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  font-weight: 450;
+  letter-spacing: -0.005em;
+  line-height: 1.5;
+  max-width: 34em;
+  color: var(--fg-60);
+  text-wrap: pretty;
+}
+
+.small,
+.muted {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.muted {
+  color: var(--fg-60);
+}
+
+.micro {
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Every number that is a count sits in the mono. */
+.stat-value {
+  display: inline-block;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: clamp(1.9rem, 3.4vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  color: var(--fg-60);
+}
+
+/* Accent words: a Brique underline under ink text. */
+.accent {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--signal-ink);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.12em;
+  text-decoration-skip-ink: none;
+}
+
+/* ======================================================================
+   Spacing · Containers
+   ====================================================================== */
+
+.section {
+  padding-block: clamp(4rem, 9vw, 7rem);
+}
+
+.stack-2 > * + * {
+  margin-top: var(--s-2);
+}
+.stack-3 > * + * {
+  margin-top: var(--s-3);
+}
+.stack-4 > * + * {
+  margin-top: var(--s-4);
+}
+.stack-5 > * + * {
+  margin-top: var(--s-5);
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+}
+
+.skip-link:focus {
+  left: var(--s-4);
+  top: var(--s-4);
+  z-index: 100;
+  background: var(--surface);
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-pill);
+}
+
+/* Side gutter never under 16 px. */
+.container {
+  width: min(1160px, 100% - clamp(2rem, 6vw, 5rem));
+  margin-inline: auto;
+}
+
+.container--narrow {
+  width: min(760px, 100% - clamp(2rem, 6vw, 5rem));
+}
+
+.container--wide {
+  width: min(1280px, 100% - clamp(2rem, 6vw, 5rem));
+}
+
+/* ======================================================================
+   Buttons
+   ====================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 44px;
+  padding-inline: 18px;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: -0.005em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+
+.btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn[aria-disabled='true'],
+.btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Terre cuite = the employer side. Labels are ink, never white. */
+.btn-brand {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+.btn-brand:hover {
+  background: #d25a25;
+}
+
+/* Indigo = the graduate side. Inverts to ivory on a dark surface. */
+.btn-ink {
+  background: var(--btn-ink-bg);
+  color: var(--btn-ink-fg);
+}
+
+.btn-ink:hover {
+  background: var(--btn-ink-hover);
+}
+
+.btn-outline {
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--fg);
+}
+
+.btn-outline:hover {
+  background: var(--inset);
+}
+
+.btn-ghost {
+  color: var(--fg-60);
+  padding-inline: 14px;
+}
+
+.btn-ghost:hover {
+  background: var(--inset);
+  color: var(--fg);
+}
+
+.btn-sm {
+  height: 36px;
+  padding-inline: 14px;
+  font-size: 0.875rem;
+}
+
+.btn-lg {
+  height: 52px;
+  padding-inline: 24px;
+  font-size: 1.05rem;
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+.btn .arrow {
+  transition: transform var(--t-fast) var(--ease);
+}
+
+.btn:hover .arrow {
+  transform: translateX(3px);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: var(--s-6);
+}
+
+.btn-row--center {
+  justify-content: center;
+}
+
+/* ======================================================================
+   Nav · language switch
+   ====================================================================== */
+
+/* Sticky, and pulled up by its own height so it occupies no flow space. */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--nav-h);
+  margin-bottom: calc(-1 * var(--nav-h));
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease);
+}
+
+.nav[data-scrolled='true'] {
+  background: var(--nav-bg);
+  border-bottom-color: var(--line);
+}
+
+.nav-inner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+.nav-logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.nav-links {
+  display: none;
+  justify-content: center;
+  gap: var(--s-2);
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding-inline: 0.75rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--fg-60);
+  transition: color var(--t-fast) var(--ease);
+}
+
+.nav-link:hover {
+  color: var(--fg);
+}
+
+/* Active = weight + a Brique rule, no pill. */
+.nav-link[data-active='true'] {
+  color: var(--fg);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--signal-ink);
+  text-underline-offset: 0.45em;
+}
+
+.nav-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.nav-login {
+  display: none;
+}
+
+/* Under 480 the CTA moves into the sheet: lockup · burger only. */
+.nav-cta {
+  display: none;
+}
+
+.nav-cta,
+.nav-login {
+  white-space: nowrap;
+}
+
+.nav-burger,
+.nav-icon-btn {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-md);
+  color: var(--fg);
+  transition: background-color var(--t-fast) var(--ease);
+}
+
+.nav-burger:hover,
+.nav-icon-btn:hover {
+  background: var(--inset);
+}
+
+@media (min-width: 480px) {
+  .nav-cta {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 860px) {
+  .nav-links {
+    display: flex;
+  }
+  .nav-login {
+    display: inline-flex;
+  }
+  .nav-burger {
+    display: none;
+  }
+}
+
+/* The sheet under the bar. Fixed, so the scroll lock on <body> cannot move it. */
+.nav-mobile {
+  position: fixed;
+  inset-inline: 0;
+  top: var(--nav-h);
+  z-index: 49;
+  max-height: calc(100dvh - var(--nav-h));
+  overflow-y: auto;
+  background: var(--canvas);
+  border-bottom: 1px solid var(--line);
+  padding: var(--s-4) clamp(1rem, 4vw, 2rem) var(--s-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  transform-origin: top;
+  animation: menu-in 0.3s var(--ease);
+}
+
+.nav-mobile > a:not(.btn) {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--s-3);
+  border-radius: var(--r-md);
+  font-weight: 600;
+}
+
+.nav-mobile > a:not(.btn):hover {
+  background: var(--inset);
+}
+
+.nav-mobile > a:not(.btn)[data-active='true'] {
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--signal-ink);
+  text-underline-offset: 0.35em;
+}
+
+.nav-mobile hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin-block: var(--s-3);
+}
+
+.nav-mobile .btn + .btn {
+  margin-top: var(--s-2);
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* FR / EN pills. The selected one is a Terre cuite fill with ink text. */
+.lang-switch {
+  display: inline-flex;
+  gap: 0.2rem;
+  padding: 0.2rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+}
+
+.lang-switch a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding-inline: 0.75rem;
+  border-radius: var(--r-pill);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--fg-60);
+}
+
+.lang-switch a[data-active='true'] {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+/* ======================================================================
+   Badges · chips
+   ====================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--r-pill);
+  background: var(--inset);
+  color: var(--fg);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.badge svg {
+  width: 12px;
+  height: 12px;
+}
+
+.badge--success {
+  background: var(--true-soft);
+  color: var(--check-fg);
+}
+
+.badge--warn {
+  background: var(--signal-soft);
+  color: var(--warn-ink);
+}
+
+.badge--danger {
+  background: var(--alert-soft);
+  color: var(--danger-ink);
+}
+
+.badge--ink {
+  background: var(--night);
+  color: var(--mint);
+}
+
+.badge--muted {
+  color: var(--fg-60);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 36px;
+  padding-inline: 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.chip--sm {
+  height: 30px;
+  padding-inline: 0.7rem;
+  font-size: 0.78rem;
+}
+
+.chip[data-active='true'] {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--on-signal);
+}
+
+/* ======================================================================
+   Footer (the slab itself is in blocks.css)
+   ====================================================================== */
+
+.footer a:hover {
+  color: var(--fg);
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-6) var(--s-5);
+}
+
+@media (min-width: 480px) {
+  .footer-top {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 720px) {
+  .footer-top {
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+  }
+}
+
+.footer-cols {
+  display: contents;
+}
+
+.footer-col {
+  display: grid;
+  gap: 0.55rem;
+  align-content: start;
+  font-size: 0.9rem;
+  color: var(--fg-60);
+}
+
+.footer-col > h3 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  margin-bottom: 8px;
+}
+
+.footer-col a {
+  color: var(--fg);
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
+
+.footer-col a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.footer-brand {
+  gap: var(--s-4);
+  padding-right: var(--s-4);
+}
+
+.footer-brand > * {
+  justify-self: start;
+}
+
+.footer-tagline {
+  max-width: 22rem;
+  margin: 0;
+  color: var(--fg-60);
+}
+
+.footer-socials {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.footer-social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  color: var(--fg-60);
+  transition:
+    color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease);
+}
+
+.footer-social:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+
+/* The plain statement of independence, above the wordmark. */
+.footer-disclaimer {
+  margin-top: var(--s-7);
+  max-width: 60em;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--fg-60);
+}
+
+/* The giant outlined wordmark; the period is filled Brique. */
+.footer-word {
+  margin-top: var(--s-7);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(4rem, 14vw, 12rem);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-align: center;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--outline-word);
+  user-select: none;
+  overflow: hidden;
+}
+
+.footer-word span {
+  color: var(--signal-ink);
+  -webkit-text-stroke: 0;
+}
+
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-3) var(--s-5);
+  margin-top: var(--s-6);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+  font-size: 0.8rem;
+  color: var(--fg-60);
+}
+
+.footer-bottom p {
+  margin: 0;
+}
+
+/* ======================================================================
+   Brand lockup: "dangbe" + the period
+   ====================================================================== */
+
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  color: var(--fg);
+}
+
+.brand-lockup-word {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.brand-lockup-dot {
+  color: var(--signal-ink);
+}
+
+.brand-lockup[data-on='dark'] {
+  color: var(--mint);
+}
+
+.brand-lockup[data-on='dark'] .brand-lockup-dot {
+  color: var(--signal);
+}
+
+/* ======================================================================
+   Legal pages
+   ====================================================================== */
+
+.legal {
+  max-width: 68ch;
+  margin-inline: auto;
+  padding-top: clamp(2.5rem, 6vw, 4.5rem);
+  padding-bottom: clamp(4rem, 8vw, 6rem);
+}
+
+.legal h1 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.legal-updated {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--fg-60);
+}
+
+.legal-intro {
+  margin-top: 1.75rem;
+}
+
+.legal h2 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-top: 2.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.legal p,
+.legal li {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--fg-60);
+}
+
+.legal p + p,
+.legal ul,
+.legal ul + p {
+  margin-top: 0.8rem;
+}
+
+.legal ul {
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+/* ======================================================================
+   Entrance & scroll reveal
+   Nothing is hidden unless `html.js` is present (the boot script adds it
+   before paint): with JavaScript off, every section is visible.
+   ====================================================================== */
+
+html.js .fade-up {
+  animation: fade-up var(--t) var(--ease) both;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  transition:
+    opacity 500ms var(--ease),
+    transform 500ms var(--ease);
+  transition-delay: var(--d, 0s);
+}
+
+html.js .reveal[data-in='false'] {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+/* ======================================================================
+   Reduced motion — every animation and transition off.
+   ====================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  html.js .fade-up,
+  html.js .reveal[data-in='false'] {
+    opacity: 1;
+    transform: none;
+  }
+  .btn:hover,
+  .btn:active,
+  .btn:hover .arrow {
+    transform: none;
+  }
+}
