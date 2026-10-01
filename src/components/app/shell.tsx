@@ -34,7 +34,7 @@ export function AppShell({ user, children }: { user: SessionUser; children: Reac
     <div className="shell">
       <aside className="shell__rail">
         <div className="shell__brand">
-          <Link href="/espace" aria-label={t.brand}>
+          <Link href="/espace">
             <BrandLockup size={44} />
           </Link>
           <span className="shell__space">{t.brand}</span>

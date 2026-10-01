@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="auth grid-bg">
       <div className="auth__inner">
-        <Link href="/" className="auth__logo" aria-label="DANGBE">
+        <Link href="/" className="auth__logo">
           <BrandLockup size={56} />
         </Link>
         <div className="auth__card">{children}</div>

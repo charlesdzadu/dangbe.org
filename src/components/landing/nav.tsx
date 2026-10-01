@@ -74,7 +74,7 @@ export function Nav() {
       <header className="nav nav--card" data-scrolled={scrolled || open}>
         <div className="container nav-inner">
           <div className="nav-brand">
-            <Link href={ROUTES.home[locale]} className="nav-logo" aria-label={t.home}>
+            <Link href={ROUTES.home[locale]} className="nav-logo">
               <BrandLockup size={52} />
             </Link>
           </div>
